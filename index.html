@@ -1,0 +1,74 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"   integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="   crossorigin="anonymous"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
+	<style>
+	body {padding: 0; margin: 0;} 
+	section {width: 100%;
+		display: table;
+		margin: 0;
+		max-width: none;
+		background-color: #505050;
+		height: 100vh;
+	}
+	.draggable {
+		position: absolute;
+		visibility:hidden;
+	}
+</style>
+	<script>
+  // Initialize Firebase
+  var config = {
+  	apiKey: "AIzaSyDpCoE_wQvmJoo_eq-BrN-9vkgwgCWSxPc",
+  	authDomain: "header-e3022.firebaseapp.com",
+  	databaseURL: "https://header-e3022.firebaseio.com",
+  	storageBucket: "header-e3022.appspot.com",
+  };
+  firebase.initializeApp(config);
+
+  var positions = [];
+  var keys = [];
+  var positionRef = firebase.database().ref('things');
+
+  positionRef.once('value', function(snapshot) {
+  	positions = snapshot.val();
+  	var counter = 1;
+  	for (thing in positions) {
+  		keys.push(thing);
+  		$('#img'+counter).offset({top:positions[thing].y,left:positions[thing].x});
+  		$('#img'+counter).css('visibility','visible');
+  		counter++;
+  	}
+  });
+
+  function updatePosition(thingId, thing_x, thing_y) {
+  	firebase.database().ref('things/' + thingId).update({
+  		x: thing_x,
+  		y: thing_y
+  	});
+  }
+
+  $( function() {
+    $( ".draggable" ).draggable({helper:"original",stop: function( event, ui ) {}});
+    $( ".draggable" ).on( "dragstop", function( event, ui ) {
+    	theID = ui.helper.attr('id');
+    	theID = theID.substring(theID.length-1,theID.length);
+    	console.log(ui.offset.left);
+    	console.log(ui.offset.top);
+    	updatePosition(keys[theID-1],ui.offset.left,ui.offset.top);
+    } );
+  } );
+
+</script>
+</head>
+
+<body>
+<section>
+  <img id="img1" height=150 width=291 class="draggable" src="img/side.png">
+  <img id="img2" height=150 width=291 class="draggable" src="img/walk.png">
+  <img id="img3" height=150 width=291 class="draggable" src="img/labs.png">
+  </section>
+</body>
+</html>
