@@ -51,8 +51,8 @@
   }
 
   $( function() {
-    $( ".draggable" ).draggable({helper:"original",stop: function( event, ui ) {}});
-    $( ".draggable" ).on( "dragstop", function( event, ui ) {
+    $( ".draggable" ).draggable({helper:"original",drag: function( event, ui ) {}});
+    $( ".draggable" ).on( "drag", function( event, ui ) {
     	theID = ui.helper.attr('id');
     	theID = theID.substring(theID.length-1,theID.length);
     	console.log(ui.offset.left);
