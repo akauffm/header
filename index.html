@@ -32,7 +32,7 @@
   var keys = [];
   var positionRef = firebase.database().ref('things');
 
-  positionRef.once('value', function(snapshot) {
+  positionRef.on('value', function(snapshot) {
   	positions = snapshot.val();
   	var counter = 1;
   	for (thing in positions) {
